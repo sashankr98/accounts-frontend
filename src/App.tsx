@@ -1,8 +1,9 @@
 import { ConfigProvider, Layout, theme, Typography } from "antd"
 import { magenta } from "@ant-design/colors"
-import { Accounts } from "./components/Accounts"
+import { Navigator } from "./components/Navigator"
 
 function App() {
+
     return (
         <>
             <ConfigProvider
@@ -13,12 +14,10 @@ function App() {
                     algorithm: theme.darkAlgorithm,
                 }}
                 table={{
-                    style: { 
+                    style: {
                         marginTop: "1em",
                         marginBottom: "1em",
-                        maxWidth: "600px",
                     },
-                    
                 }}
             >
                 <Layout
@@ -30,7 +29,7 @@ function App() {
                 >
                     <Typography.Title>Accounts Tracker</Typography.Title>
                     <Layout.Content>
-                        <Accounts />
+                        <Navigator />
                     </Layout.Content>
                 </Layout>
             </ConfigProvider>
