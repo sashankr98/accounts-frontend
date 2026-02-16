@@ -1,23 +1,31 @@
 import { Button, Collapse, Flex, Form, Input, InputNumber, Space, Statistic, Table, theme, Typography } from "antd";
 import { useState } from "react";
-import type { Account } from "../utils/Types";
+import type { Account, InputComponent, InputType } from "../utils/Types";
 import { grey, red } from "@ant-design/colors";
-import { useAccounts } from "../hooks/useAccounts";
 import { PlusCircleFilled } from "@ant-design/icons";
 import { useForm } from "antd/es/form/Form";
 import { dollarAmountFormatter } from "../utils/Utils";
+import { useAccounts } from "../hooks/useData";
 
 
 export function Accounts() {
-    const { accounts, addAccount } = useAccounts();
+    // const { accounts, addAccount } = useAccounts();
+    const [accounts, addAccount, refetchAccounts, loading, error] = useAccounts();
 
+    // TODO: Remove dummy data
+    const data = accounts.length > 0 ? accounts : [
+        { id: 1, name: "My Splitwise", initialAmount: 0, currentAmount: 2147.32 },
+        { id: 2, name: "Credit Card 1", initialAmount: 0, currentAmount: -232.21 },
+    ];
     return (
         <>
             <Flex vertical align="center" gap="large">
+                {// TODO: Use api result
+                }
                 <Table<Account>
-                    dataSource={accounts}
+                    dataSource={data}
                     pagination={false}
-                    rowKey={"name"}
+                    rowKey={"id"}
                     expandable={{
                         fixed: "right",
                         expandRowByClick: true,
@@ -28,7 +36,7 @@ export function Accounts() {
                         root: { maxWidth: "600px" },
                     }}
                 >
-                    <Table.Column title="Name" dataIndex={"name"} />
+                    <Table.Column title="Name" dataIndex="name" />
                     <Table.Column
                         hidden
                         title="Initial Amount"
@@ -113,9 +121,7 @@ function AmountComparizon(props: { account: Account }) {
     )
 }
 
-export function AccountInput(props: {
-    onSubmit: (account: Omit<Account, "currentAmount">) => Promise<void>,
-}) {
+const AccountInput: InputComponent<Account> = ({ onSubmit }) => {
     const { token } = theme.useToken();
     const [form] = useForm();
 
@@ -135,13 +141,15 @@ export function AccountInput(props: {
                     {
                         label: (<Typography.Text strong style={{ fontSize: "16px" }}>Add New</Typography.Text>),
                         children: (
-                            <Form
+                            <Form<InputType<Account>>
                                 form={form}
                                 name="AccountInput"
                                 layout="vertical"
-                                onFinish={(account: Omit<Account, "currentAmount">) => {
-                                    props.onSubmit(account);
-                                    form.resetFields();
+                                onFinish={(value) => {
+                                    onSubmit({
+                                        ...value,
+                                        currentAmount: value.initialAmount,
+                                    }).then(() => form.resetFields());
                                 }}
                                 styles={{
                                     root: { padding: "8px 8px 0px" }
@@ -154,7 +162,7 @@ export function AccountInput(props: {
                                         { required: true, message: "" },
                                         {
                                             pattern: /^\w*$/,
-                                            message: "Invalid username"
+                                            message: "Invalid name"
                                         },
                                     ]}
                                 >
@@ -186,7 +194,9 @@ export function AccountInput(props: {
                                         type="primary"
                                         htmlType="submit"
                                         onClick={() => form.submit()}
-                                    >Submit</Button>
+                                    >
+                                        Submit
+                                    </Button>
                                 </Form.Item>
                             </Form>
                         ),
