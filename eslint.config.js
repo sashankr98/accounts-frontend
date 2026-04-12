@@ -22,7 +22,7 @@ export default defineConfig([
         rules: {
             quotes: ["error", "double"],
             "@typescript-eslint/no-explicit-any": "warn",
-
+            "react-hooks/set-state-in-effect": "off",
         }
     },
 ])

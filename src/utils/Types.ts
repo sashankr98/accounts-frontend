@@ -32,6 +32,8 @@ export type Category = {
     id: number;
     name: string;
     budget?: number;
+    excludeFromExpenses?: boolean;
+    excludeFromIncome?: boolean;
 };
 
 export const View = {

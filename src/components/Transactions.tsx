@@ -29,14 +29,15 @@ export function Transactions() {
                         title: {
                             border: "1px solid #303030",
                             borderRadius: "8px",
-                            marginBottom: "16px",
+                            marginBottom: "8px",
                         }
                     }}
                 >
-                {/* TODO: Fix gutter colour */}
+                    {/* TODO: Fix gutter colour */}
                     <Table.Column
                         title="Date"
                         dataIndex="date"
+                        width={120}
                         render={date => new Date(date).toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" })}
                     />
                     <Table.Column title="Description" dataIndex="description" width={300} />
@@ -102,18 +103,40 @@ const TransactionInput: InputComponent<Transaction> = ({ onSubmit }) => {
                 {/* TODO: Update input widths */}
                 {/* TODO: Update input widths */}
                 <Form.Item name="date" rules={[{ required: true }]}>
-                    <DatePicker format={"MMM DD, YYYY"}/>
+                    <DatePicker
+                        format={"MMM DD, YYYY"}
+                        styles={{
+                            root: { width: "140px" },
+                        }}
+                    />
                 </Form.Item>
                 <Form.Item name="description" rules={[{ required: true }]}>
-                    <Input placeholder="Description" />
+                    <Input
+                        placeholder="Description"
+                        styles={{
+                            root: { width: "260px" },
+                        }}
+                    />
                 </Form.Item>
                 {/* TODO: Use categories in dropdown */}
                 <Form.Item name="category" rules={[{ required: true }]}>
-                    <Select placeholder="Category" options={[{ value: "Paycheck", label: "Paycheck" }, { value: "Restaurants", label: "Restaurants" }]} />
+                    <Select
+                        placeholder="Category"
+                        options={[{ value: "Paycheck", label: "Paycheck" }, { value: "Restaurants", label: "Restaurants" }]}
+                        styles={{
+                            root: { width: "140px" },
+                        }}
+                    />
                 </Form.Item>
                 {/* TODO: Use accounts in dropdown */}
                 <Form.Item name="expenseAccount">
-                    <Select placeholder="Account" options={[{ value: "Quicksilver", label: "Quicksilver" }, { value: "CO Checking", label: "CO Checking" }]} />
+                    <Select
+                        placeholder="Account"
+                        options={[{ value: "Quicksilver", label: "Quicksilver" }, { value: "CO Checking", label: "CO Checking" }]}
+                        styles={{
+                            root: { width: "140px" },
+                        }}
+                    />
                 </Form.Item>
                 {/* TODO: Validate that expense and/or income is provided */}
                 <Form.Item name="expenseAmount">
@@ -134,7 +157,13 @@ const TransactionInput: InputComponent<Transaction> = ({ onSubmit }) => {
                     />
                 </Form.Item>
                 <Form.Item name="incomeAccount">
-                    <Select placeholder="Account" options={[{ value: "Quicksilver", label: "Quicksilver" }, { value: "CO Checking", label: "CO Checking" }]} />
+                    <Select
+                        placeholder="Account"
+                        options={[{ value: "Quicksilver", label: "Quicksilver" }, { value: "CO Checking", label: "CO Checking" }]}
+                        styles={{
+                            root: { width: "140px" },
+                        }}
+                    />
                 </Form.Item>
                 <Form.Item name="incomeAmount">
                     <InputNumber<number>
@@ -158,7 +187,7 @@ const TransactionInput: InputComponent<Transaction> = ({ onSubmit }) => {
                         type="primary"
                         shape="circle"
                         htmlType="submit"
-                        icon={<PlusOutlined/>}
+                        icon={<PlusOutlined />}
                         onClick={() => form.submit()}
                     />
                 </Form.Item>
