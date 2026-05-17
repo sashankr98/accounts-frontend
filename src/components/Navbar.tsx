@@ -1,8 +1,26 @@
 import { A, useLocation, useNavigate } from '@solidjs/router';
-import { createSignal, For } from 'solid-js';
+import { createSignal, For, onCleanup, onMount } from 'solid-js';
 import { DEFAULT_PAGE, pages, type PageDefinition } from '@/index';
 
 export function Navbar() {
+    const [isVisible, setIsVisible] = createSignal(true);
+    let lastScrollY: number = 0;
+    const onScroll = () => {
+        const currentScrollY = window.scrollY;
+
+        if (currentScrollY > lastScrollY) {
+            setIsVisible(false);
+        } else if (currentScrollY < lastScrollY) {
+            setIsVisible(true);
+        }
+
+        lastScrollY = currentScrollY;
+    };
+
+    onMount(() => window.addEventListener('scroll', onScroll));
+    onCleanup(() => window.removeEventListener('scroll', onScroll));
+
+    // Mobile only
     const [isOpen, setIsOpen] = createSignal(false);
 
     const location = useLocation();
@@ -17,12 +35,15 @@ export function Navbar() {
     };
     const inactivePages = (): PageDefinition[] => pages.filter(p => p.path !== location.pathname);
 
+
     return (
-        <div class="
-            absolute inset-x-0 bottom-0
-            m-8 flex gap-4
+        <div class={`
+            p-4 flex gap-4
             justify-center items-baseline-last
-        ">
+            bg-gradient-to-t from-gray-800/80 from-60% to-transparent
+            fixed bottom-0 w-full z-2 transition-transform duration-300
+            ${isVisible() ? 'translate-y-0' : 'translate-y-full'}
+        `}>
             <nav class="rounded-2xl bg-zinc-600 px-8 py-4"
             >
                 {/* Desktop view*/}
