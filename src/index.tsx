@@ -11,12 +11,13 @@ export type PageDefinition = RouteDefinition & {
 export const pages: PageDefinition[] = [
     {
         path: '/transactions',
+        // Path aliases like '@' do not work when lazy loading
         component: lazy(() => import('./components/Transactions')),
         label: 'Transactions',
     },
     {
         path: '/accounts',
-        component: () => <h1>Accounts</h1>,
+        component: lazy(() => import('./components/Accounts')),
         label: 'Accounts',
     },
     {
@@ -26,7 +27,7 @@ export const pages: PageDefinition[] = [
     },
 ];
 
-export const DEFAULT_PAGE: PageDefinition = pages[0];
+export const DEFAULT_PAGE: PageDefinition = pages[1];
 
 render(
     () => (

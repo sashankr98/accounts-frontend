@@ -1,18 +1,16 @@
 import { For } from 'solid-js';
 
-export type TableColumnProps<T> = {
-    [K in keyof T]: {
+export type TableColumnProps<T, K extends keyof T = keyof T> = {
         key: K;
         label: string;
-        format?: (value: T[K]) => string;
+        format?: (value: T) => string;
         /** By default cell text does not wrap.
          * If set to true, wrapping is enabled
          * but a min-width is set to prevent over-wrapping
          */
         wrap?: boolean;
-    }
-}[keyof T];
-
+        // TODO: Non-data columns
+}
 
 export type TableProps<T> = {
     columns: TableColumnProps<T>[];
@@ -24,20 +22,14 @@ export default function Table<T>(props: TableProps<T>) {
     const data = () => props.data;
 
     return (
-        <div class='
-            w-full
-            mt-12
-            overflow-auto
-        '>
+        <div class='overflow-auto'>
             <table class='
-                table-auto w-full
+                table-auto
                 text-left 
                 border-separate border-spacing-0
             '>
                 <thead>
-                    <tr class='
-                    bg-zinc-600/50
-                    '>
+                    <tr class='bg-zinc-600'>
                         <For each={columns()}>
                             { column => 
                                 <th class={`
@@ -63,7 +55,7 @@ export default function Table<T>(props: TableProps<T>) {
                     <For each={data()}>
                         {
                             entry => 
-                            // TODO: Click to view/edit tx
+                            // TODO: on-click actions
                             <tr>
                                 <For each={columns()}>
                                     {
@@ -71,7 +63,7 @@ export default function Table<T>(props: TableProps<T>) {
                                             const value = entry[column.key];
                                             const defaultValue = value ?? '';
                                             const displayedValue = column.format
-                                                ? column.format(value)
+                                                ? column.format(entry)
                                                 : String(defaultValue);
                                             return <td class={`
                                                 p-4

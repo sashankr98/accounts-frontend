@@ -1,36 +1,15 @@
+import Page from '@/components/Page';
 import type { TableColumnProps } from '@/components/Table';
 import Table from '@/components/Table';
+import { DataFormatter } from '@/utils/DataFormatter';
 import { mockTransactionData } from '@/utils/MockData';
-
-export type Transaction = {
-    id: number;
-    date: number;
-    description: string;
-    category: string;
-    expenseAccount?: string;
-    expenseAmount?: number;
-    incomeAccount?: string;
-    incomeAmount?: number;
-};
-
-const dateFormat = Intl.DateTimeFormat('en-GB', {
-    day: '2-digit',
-    month: 'short',
-    year: '2-digit',
-});
-
-const amountFormatter = (value: number | undefined): string => {
-    if (value === undefined) return '';
-    return `$ ${value.toLocaleString()}`;
-};
+import type { Transaction } from '@/utils/Types';
 
 const TransactionTableColumns: TableColumnProps<Transaction>[] = [
     {
         key: 'date',
         label: 'Date',
-        format: date => {
-            return dateFormat.format(new Date(date));
-        },
+        format: ({ date }) => DataFormatter.formatDate(date),
     },
     {
         key: 'description',
@@ -48,7 +27,7 @@ const TransactionTableColumns: TableColumnProps<Transaction>[] = [
     {
         key: 'expenseAmount',
         label: 'Expense',
-        format: amountFormatter,
+        format: ({ expenseAmount }) => DataFormatter.formatCurrencyValue(expenseAmount),
     },
     {
         key: 'incomeAccount',
@@ -57,17 +36,14 @@ const TransactionTableColumns: TableColumnProps<Transaction>[] = [
     {
         key: 'incomeAmount',
         label: 'Income',
-        format: amountFormatter,
+        format: ({ incomeAmount }) => DataFormatter.formatCurrencyValue(incomeAmount),
     },
 ];
 
 export default function Transactions() {
     return (
-        <div>
-            <h1>
-                Transactions
-            </h1>
+        <Page title='Transactions'>
             <Table columns={TransactionTableColumns} data={mockTransactionData}/>
-        </div>
+        </Page>
     );
 }
